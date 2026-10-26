@@ -59,6 +59,10 @@ Request with both addresses (prefixed with `1`), `currency: usd`, `general: true
 - **2a:** `netWorth` == sum of the `value.total` of both addresses from the tokens endpoint (Scenario 1)
 - **2b:** `netWorth` == Σ `data[].value` (balances endpoint only), and every requested address is present
 
+A full requirement-by-requirement traceability matrix (every requirement from the brief → the tests that
+verify it, plus the test inventory and API observations) is in
+[`docs/requirements-coverage.xlsx`](docs/requirements-coverage.xlsx).
+
 ### Additional coverage
 
 | Area | Test |
