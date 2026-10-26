@@ -18,6 +18,8 @@ Addresses under test: `96Y3j66AX16noUAAVriW8bmwTGzV1PVqBKCEArPd5fuU`, `7eXxD3vQw
 Requirements: **Node.js 20+** (22 recommended, see `.nvmrc`) and npm.
 
 ```bash
+git clone https://github.com/dxbzoran-spec/solflare-api-tests.git
+cd solflare-api-tests
 npm ci                    # install dependencies
 npm test                  # run the whole suite
 npm run report            # open the HTML report of the last run
