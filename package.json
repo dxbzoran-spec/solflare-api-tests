@@ -1,0 +1,25 @@
+{
+  "name": "solflare-api-tests",
+  "version": "1.0.0",
+  "description": "API tests for the Solflare wallet API (Playwright request API + TypeScript)",
+  "scripts": {
+    "test": "playwright test",
+    "test:scenario1": "playwright test --grep @scenario1",
+    "test:scenario2": "playwright test --grep @scenario2",
+    "typecheck": "tsc",
+    "report": "playwright show-report reports/html"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2",
+    "zod": "^4.6.7"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  }
+}
