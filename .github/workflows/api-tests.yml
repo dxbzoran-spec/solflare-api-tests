@@ -9,14 +9,19 @@ on:
   schedule:
     - cron: '0 6 * * *'
 
+# `checks: write` lets the JUnit step publish the test results as a check on the run page.
+permissions:
+  contents: read
+  checks: write
+
 jobs:
   api-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -33,7 +38,7 @@ jobs:
 
       - name: Upload HTML report
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: api-test-report
           path: reports/
@@ -41,7 +46,7 @@ jobs:
 
       - name: Publish test summary
         if: ${{ !cancelled() }}
-        uses: mikepenz/action-junit-report@v5
+        uses: mikepenz/action-junit-report@v6
         with:
           report_paths: reports/junit.xml
           detailed_summary: true
