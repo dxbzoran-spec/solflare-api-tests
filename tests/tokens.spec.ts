@@ -18,6 +18,9 @@ test.describe('GET /v3/portfolio/tokens/{address}', () => {
         expect(response.status()).toBe(200);
         const body = await parseTokens(response);
 
+        // Guard against a vacuous pass (0 == 0): the calculation must have real prices to work with.
+        expect(body.tokens.some((token) => token.price), 'at least one token has a price').toBe(true);
+
         const calculatedTotal = calculateTokensTotal(body.tokens);
         const tokensPlusStocks = body.tokensValue.total + body.stocksValue.total;
 

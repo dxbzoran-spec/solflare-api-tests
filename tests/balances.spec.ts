@@ -94,13 +94,28 @@ test.describe('POST /v2/portfolio/balances', () => {
     expect(balancesResponseSchema.parse(await response.json())).toEqual({ netWorth: 0, netWorthChange: 0, data: [] });
   });
 
-  test('supports a non-USD currency', async ({ walletApi }) => {
-    const response = await walletApi.getBalances(addresses, { currency: 'eur' });
+  // The endpoint "supports all supported currencies": net worth must stay consistent in each of them.
+  for (const currency of ['eur', 'gbp', 'jpy', 'chf', 'aud', 'cad', 'inr']) {
+    test(`supports currency ${currency} with a consistent net worth`, async ({ walletApi }) => {
+      const response = await walletApi.getBalances(addresses, { currency });
 
-    expect(response.status()).toBe(200);
-    const balances = balancesResponseSchema.parse(await response.json());
-    expect(balances.netWorth).toBeCloseTo(sum(balances.data.map((wallet) => wallet.value)), 9);
-  });
+      expect(response.status()).toBe(200);
+      const balances = balancesResponseSchema.parse(await response.json());
+      expect(balances.data).toHaveLength(addresses.length);
+      expect(balances.netWorth).toBeCloseTo(sum(balances.data.map((wallet) => wallet.value)), 9);
+    });
+  }
+
+  for (const network of ['devnet', 'testnet'] as const) {
+    test(`returns every wallet and a consistent net worth on ${network}`, async ({ walletApi }) => {
+      const response = await walletApi.getBalances(addresses, { network });
+
+      expect(response.status()).toBe(200);
+      const balances = balancesResponseSchema.parse(await response.json());
+      expect(balances.data.map((wallet) => wallet.publicKey).sort()).toEqual([...addresses].sort());
+      expect(balances.netWorth).toBeCloseTo(sum(balances.data.map((wallet) => wallet.value)), 9);
+    });
+  }
 
   test.describe('negative cases', () => {
     test('rejects addresses without the `1` prefix with 400', async ({ walletApi }) => {
