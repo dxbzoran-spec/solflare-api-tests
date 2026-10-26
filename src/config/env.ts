@@ -13,6 +13,9 @@ export const env = {
 
   /** How many times a request is retried after HTTP 429 (the API is rate limited per IP). */
   rateLimitRetries: Number(process.env.RATE_LIMIT_RETRIES ?? 3),
+
+  /** Upper bound (ms) for a single request in the response-time tests. */
+  maxResponseTimeMs: Number(process.env.MAX_RESPONSE_TIME_MS ?? 5_000),
 };
 
 /** Addresses under test, as given in the assignment. */

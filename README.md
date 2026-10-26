@@ -41,6 +41,7 @@ All settings have sensible defaults and can be overridden with environment varia
 | `BASE_URL` | `https://wallet-api.solflare.com` | API under test |
 | `CROSS_REQUEST_TOLERANCE` | `0.01` | Max allowed USD difference between values taken from **different** requests (live prices) |
 | `RATE_LIMIT_RETRIES` | `3` | Retries after an HTTP 429 response |
+| `MAX_RESPONSE_TIME_MS` | `5000` | Max allowed duration of a single request in the response-time tests |
 
 ## Test cases
 
@@ -67,10 +68,12 @@ Request with both addresses (prefixed with `1`), `currency: usd`, `general: true
 | Tokens | Response contract (zod schema), non-negative amounts, positive USD prices, empty `errors` |
 | Tokens | `devnet` and `testnet` return valid, self-consistent responses |
 | Tokens | Omitting `network` defaults to `mainnet` |
+| Tokens | Responds within `MAX_RESPONSE_TIME_MS` for both addresses |
 | Balances | Each wallet value equals that address's tokens portfolio total |
 | Balances | Single address, duplicate addresses (counted once), empty list (net worth 0) |
 | Balances | Every supported currency (`eur`, `gbp`, `jpy`, `chf`, `aud`, `cad`, `inr`) returns a consistent net worth |
 | Balances | `devnet` and `testnet` return every wallet and a consistent net worth |
+| Balances | Responds within `MAX_RESPONSE_TIME_MS` |
 | Negative | Unsupported network → 400 (both endpoints) |
 | Negative | Invalid public key → 400 (tokens), non-base58 key → 400 (balances) |
 | Negative | Missing `1` prefix → 400, unsupported currency → 422, missing `pubkeys` → 400 |

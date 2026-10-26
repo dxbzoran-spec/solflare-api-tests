@@ -117,6 +117,13 @@ test.describe('POST /v2/portfolio/balances', () => {
     });
   }
 
+  test('responds within the maximum response time', async ({ walletApi }) => {
+    const response = await walletApi.getBalances(addresses, { network: 'mainnet' });
+
+    expect(response.status()).toBe(200);
+    expect(walletApi.lastResponseTimeMs).toBeLessThanOrEqual(env.maxResponseTimeMs);
+  });
+
   test.describe('negative cases', () => {
     test('rejects addresses without the `1` prefix with 400', async ({ walletApi }) => {
       const response = await walletApi.postBalances({ ...validBody, pubkeys: [...addresses] });

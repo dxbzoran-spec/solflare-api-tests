@@ -76,6 +76,14 @@ test.describe('GET /v3/portfolio/tokens/{address}', () => {
     });
   }
 
+  test('responds within the maximum response time for both addresses', async ({ walletApi }) => {
+    for (const address of addresses) {
+      const response = await walletApi.getTokens(address, 'mainnet');
+      expect(response.status()).toBe(200);
+      expect(walletApi.lastResponseTimeMs, `response time for ${address}`).toBeLessThanOrEqual(env.maxResponseTimeMs);
+    }
+  });
+
   test('defaults to mainnet when the network parameter is omitted', async ({ walletApi }) => {
     // Both calls are fired together so live price movement between them is minimal.
     const [withoutNetwork, mainnet] = await Promise.all([

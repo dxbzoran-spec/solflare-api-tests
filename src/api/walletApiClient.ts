@@ -32,6 +32,9 @@ export interface RequestOptions {
 export class WalletApiClient {
   readonly installId: string;
 
+  /** Duration (ms) of the last HTTP attempt, excluding any time spent waiting on a 429 `Retry-After`. */
+  lastResponseTimeMs = 0;
+
   constructor(
     private readonly request: APIRequestContext,
     installId: string = randomUUID(),
@@ -88,7 +91,9 @@ export class WalletApiClient {
   /** Sends the request, retrying on HTTP 429 after the delay the server asks for in `Retry-After`. */
   private async send(doRequest: () => Promise<APIResponse>): Promise<APIResponse> {
     for (let attempt = 1; ; attempt++) {
+      const startedAt = performance.now();
       const response = await doRequest();
+      this.lastResponseTimeMs = performance.now() - startedAt;
       if (response.status() !== 429 || attempt > env.rateLimitRetries) return response;
 
       const retryAfterSeconds = Number(response.headers()['retry-after']) || 10;
